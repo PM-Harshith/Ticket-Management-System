@@ -22,7 +22,7 @@ public class TicketController {
     @GetMapping("/ticket/get")
     private ResponseEntity<Ticket> getTicket(@RequestParam String id) {
         Ticket ticket = ticketService.getTicket(Integer.valueOf(id));
-        return new ResponseEntity(ticket, HttpStatus.OK);
+        return new ResponseEntity<>(ticket, HttpStatus.OK);
     }
 
 }
