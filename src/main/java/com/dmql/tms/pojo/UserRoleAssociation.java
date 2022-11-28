@@ -1,6 +1,6 @@
 package com.dmql.tms.pojo;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "user_role_association")

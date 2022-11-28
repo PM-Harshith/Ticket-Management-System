@@ -2,7 +2,7 @@ package com.dmql.tms.pojo;
 
 import lombok.Data;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "ticket_status")

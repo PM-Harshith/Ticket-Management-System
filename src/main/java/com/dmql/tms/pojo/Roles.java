@@ -1,6 +1,7 @@
 package com.dmql.tms.pojo;
 
-import javax.persistence.*;
+
+import jakarta.persistence.*;
 
 @Entity
 @Table(name="roles")
@@ -16,3 +17,4 @@ public class Roles {
     @Column(name = "role_description")
     private String roleDescription;
 }
+

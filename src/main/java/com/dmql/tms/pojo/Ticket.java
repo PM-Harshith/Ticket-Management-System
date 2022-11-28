@@ -2,16 +2,15 @@ package com.dmql.tms.pojo;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import jakarta.transaction.TransactionScoped;
+import com.opencsv.bean.CsvBindByName;
+import jakarta.persistence.*;
 import lombok.Data;
-import org.springframework.stereotype.Indexed;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Entity
-@Table
+@Table(name = "ticket")
 @Data
 public class Ticket {
     @Id
@@ -28,6 +27,7 @@ public class Ticket {
     private int ticketStatus;
 
     @Column
+    @CsvBindByName(column = "ticket_description")
     private String ticket_description;
 
     @Column
@@ -43,8 +43,14 @@ public class Ticket {
     private int agent_id;
 
     @Transient
+    @CsvBindByName(column = "category_name")
     private String category_name;
 
     @Transient
+    @CsvBindByName(column = "status_name")
     private String status_name;
+
+    @CsvBindByName(column = "sub_category")
+    @Transient
+    private String subCategory;
 }

@@ -1,6 +1,6 @@
 package com.dmql.tms.controller;
 
-import ch.qos.logback.core.util.TimeUtil;
+
 import com.dmql.tms.pojo.*;
 import com.dmql.tms.repository.*;
 import com.opencsv.bean.CsvToBean;
@@ -38,7 +38,7 @@ public class TicketDataController {
     @PostMapping("/category/upload")
     public String uploadCategories(@RequestParam("file")MultipartFile file) {
         try (Reader reader = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            CsvToBean<TicketCategories> csvToBean = new CsvToBeanBuilder(reader)
+            CsvToBean csvToBean = new CsvToBeanBuilder<>(reader)
                     .withType(TicketCategories.class)
                     .withIgnoreLeadingWhiteSpace(true)
                     .build();
@@ -83,19 +83,21 @@ public class TicketDataController {
             for(Users user: usersList) {
                 usersMap.put(user.getId(), user);
             }
-
-
+            Random rnd = new Random();
+            int ticketId =  rnd.nextInt(99999);
             List<Communication> communications = new ArrayList<>();
             for(Ticket ticket: tickets) {
-                Random rnd = new Random();
-                int ticketId = rnd.nextInt(99999999);
-                ticket.setTicketId(ticketId);
+
+                ticket.setTicketId(ticketId++);
                 ticket.setTicketCategory(categoryMap.get(ticket.getCategory_name()));
                 ticket.setTicketStatus(statusMap.get(ticket.getStatus_name()));
                 ticket.setUpdated_at(LocalDateTime.now());
                 ticket.setCreated_at(LocalDateTime.now());
                 ticket.setCreated_by_id(ticket.getTicketId()%100);
                 ticket.setAgent_id((ticket.getTicketId())%100 + 100);
+                if(Objects.isNull(ticket.getTicket_description()) || ticket.getTicket_description().isEmpty())
+                    ticket.setTicket_description(ticket.getSubCategory());
+                ticketRepository.save(ticket);
                 if(ticket.getTicketStatus()>0) {
                     Communication communication = new Communication();
                     communication.setTicket_id(ticketId);
@@ -108,11 +110,10 @@ public class TicketDataController {
                     communication.setPhone_number(user.getPhoneNumber());
                     communication.setMessage(String.format(message, ticket.getTicket_description()));
                     communications.add(communication);
+                    communicationRepository.save(communication);
                 }
             }
 
-            ticketRepository.saveAll(tickets);
-            communicationRepository.saveAll(communications);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -120,3 +121,4 @@ public class TicketDataController {
         return "SUCCESS";
     }
 }
+

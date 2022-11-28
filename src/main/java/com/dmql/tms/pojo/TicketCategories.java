@@ -1,15 +1,14 @@
 package com.dmql.tms.pojo;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.Data;
 
-import javax.persistence.*;
+import com.opencsv.bean.CsvBindByName;
+import jakarta.persistence.*;
+import lombok.Data;
 
 
 @Entity
 @Table(name = "ticket_categories")
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+//@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
 public class TicketCategories {
 
@@ -19,5 +18,6 @@ public class TicketCategories {
     private int id;
 
     @Column(name="category_name")
+    @CsvBindByName(column = "category_name")
     private String categoryName;
 }
